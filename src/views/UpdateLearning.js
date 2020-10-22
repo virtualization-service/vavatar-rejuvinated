@@ -24,7 +24,8 @@ import {
   Row,
   CardHeader,
   Col,
-  FormGroup
+  FormGroup,
+  Button
 } from "reactstrap";
 
 import TextField from '@material-ui/core/TextField';
@@ -33,55 +34,53 @@ import CustomTables from "views/CustomTables.js"
 
 class UpdateLearning extends React.Component {
 
-  static columns = 
-      [
-        {
-          Header: 'Sequence',
-          accessor: 'sequence',
-        },
-        {
-          Header: 'Request',
-          accessor: 'request',
-        },
-        {
-          Header: 'Response',
-          accessor: 'response',
-        },
-        {
-          Header: 'Created On',
-          accessor: 'createdDate',
-        }
-      ];
+  static columns =
+    [
+      {
+        Header: 'Request',
+        accessor: 'request',
+      },
+      {
+        Header: 'Response',
+        accessor: 'response',
+      },
+      {
+        Header: 'Created On',
+        accessor: 'created_date',
+      }
+    ];
 
-  constructor(props){
+  constructor(props) {
     super(props);
 
-    this.state = {operations : [], rowData:[]}
+    this.state = { operations: [], rowData: [], selectedOperation: '' }
 
     this.loadOperations = this.loadOperations.bind(this);
     this.loadServiceData = this.loadServiceData.bind(this);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
+
     this.loadOperations();
-    console.log(this.props.match.params.id);
   }
 
-  loadOperations(){
+  loadOperations() {
     var self = this;
 
     var service = new DataService()
     var operations = service.getAllOperations();
 
-    operations.then(function(response){
-      var data = response.map(function(elem){
-        return {"Name" : elem, "Operation" : elem, "ServiceEndpoint": elem}
+    operations.then(function (response) {
+      var data = response.map(function (elem) {
+        return { "Name": elem, "Operation": elem, "ServiceEndpoint": elem }
       });
-      self.setState({operations : data});
+      self.setState({ operations: data });
     });
   }
 
-  loadServiceData(operation){
+  loadServiceData(operation) {
 
-    console.log(operation);
-    if(operation !== ''){
+    this.setState({ selectedOperation: operation ?? '' })
+    if (operation && operation !== '') {
+
       var self = this;
 
       var service = new DataService()
@@ -89,33 +88,35 @@ class UpdateLearning extends React.Component {
         .then(response => response.json())
         .then(function (response) {
 
-            var statefuleData = response.map((elem, index) => {
-              return {
-                sequence : index,
-                request : elem.request.raw_data,
-                response : elem.response.raw_data,
-              }
-            })
-             self.setState({rowData : [...statefuleData]})
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-  
-      // operations.then(function(response){
-      //   var data = response.toJ
-      //   var data = response.map(function(elem){
-      //     return {"Name" : elem, "Operation" : elem, "ServiceEndpoint": elem}
-      //   });
-      //   self.setState({operations : data});
-      // });
+          var statefuleData = response && response.map ? response.map((elem, index) => {
+            return {
+              id: elem._id,
+              request: elem.request.raw_data,
+              response: elem.response.raw_data,
+              created_date: elem.created_date
+            }
+          }) : []
+          self.setState({ rowData: [...statefuleData] })
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+    else {
+      this.setState({ rowData: [] })
     }
   }
 
-  render(){
+  onDeleteClick(data) {
+    var service = new DataService();
+    service.deleteResponse(this.state.selectedOperation, data.id)
+      .then(resp => this.loadServiceData(this.state.selectedOperation));
+  }
+
+  render() {
     return (
       <div className="content">
-  
+
         <Row>
           <Col md="12">
             <Card className="card-user">
@@ -123,126 +124,51 @@ class UpdateLearning extends React.Component {
                 <FormGroup>
                   <label>Select Operation</label>
                   <Autocomplete
-                        onChange={e => this.loadServiceData(e.target.innerText)}
-                        options={this.state.operations}
-                        getOptionLabel={(option) => option.Operation}
-                        style={{ width: 500, height :50 }}
-                        renderInput={(params) => <TextField {...params} />}
-                      />
+                    onChange={e => this.loadServiceData(e.target.innerText)}
+                    options={this.state.operations}
+                    getOptionLabel={(option) => option.Operation}
+                    style={{ width: 500, height: 50 }}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
                 </FormGroup>
-              
-  
-  
               </CardHeader>
               <CardBody>
-                <Row>
-                  <Col md='12'>
-                   
+                <Row key={this.state.selectedOperation}>
+                  <Col md='12' hidden={this.state.rowData && this.state.rowData.length > 0}>
+                    <label>{this.state.selectedOperation === '' ? '' : 'No Trainings Found!'}</label>
                   </Col>
                 </Row>
-                <Row>
+                <Row hidden={this.state.rowData === null || this.state.rowData.length === 0}>
                   <Col>
-                  <CustomTables data={this.state.rowData} columns={UpdateLearning.columns} PageSize={5} edit={true} remove={true} paginationSize={5} />
+                    <CustomTables data={this.state.rowData} columns={UpdateLearning.columns} PageSize={5} edit={false} remove={true} paginationSize={5} onDelete={this.onDeleteClick} />
                   </Col>
                 </Row>
-                
+                <Row>
+                      <div className="update ml-auto mr-auto">
+                      <Button
+                          className="btn-round"
+                          color="secondary"
+                          type="button">
+                          Reset
+                        </Button>
+                        <Button
+                          className="btn-round"
+                          color="primary"
+                          type="button"
+                        >
+                          Train Requests
+                        </Button>
+                      </div>
+                    </Row>
               </CardBody>
             </Card>
           </Col>
         </Row>
       </div>
-  
+
     );
 
   }
 }
-
-
-// const UpdateLearning = () => {
-
-//   const columns = React.useMemo(
-//     () =>
-//       [
-//         {
-//           Header: 'First Name',
-//           accessor: 'make',
-//         },
-//         {
-//           Header: 'Last Name',
-//           accessor: 'model',
-//         },
-//         {
-//           Header: 'Last Name',
-//           accessor: 'price',
-//         },
-//         {
-//           Header: 'Last Name',
-//           accessor: 'year',
-//         }
-//       ]
-//   );
-
-//   const [rowData, setRowData] = useState([
-//     { make: "Toyota", model: "Celica", price: 35000, year: 2020 },
-//     { make: "Ford", model: "Mondeo", price: 32000, year: 2020 },
-//     { make: "Porsche", model: "Boxter", price: 72000, year: 2018 },
-//     { make: "Toyota", model: "Celica", price: 35000, year: 2020 },
-//     { make: "Ford", model: "Mondeo", price: 32000, year: 2020 },
-//     { make: "Porsche", model: "Boxter", price: 72000, year: 2018 },
-//     { make: "Toyota", model: "Celica", price: 35000, year: 2020 },
-//     { make: "Ford", model: "Mondeo", price: 32000, year: 2020 },
-//     { make: "Porsche", model: "Boxter", price: 72000, year: 2018 },
-//     { make: "Toyota", model: "Celica", price: 35000, year: 2020 },
-//     { make: "Ford", model: "Mondeo", price: 32000, year: 2020 },
-//     { make: "Porsche", model: "Boxter", price: 72000, year: 2018 },
-//     { make: "Toyota", model: "Celica", price: 35000, year: 2020 },
-//     { make: "Ford", model: "Mondeo", price: 32000, year: 2020 },
-//     { make: "Porsche", model: "Boxter", price: 72000, year: 2018 },
-//     { make: "Toyota", model: "Celica", price: 35000, year: 2020 },
-//     { make: "Ford", model: "Mondeo", price: 32000, year: 2020 },
-//     { make: "Porsche", model: "Boxter", price: 72000, year: 2018 },
-//   ]);
-
-//   return (
-//     <div className="content">
-
-//       <Row>
-//         <Col md="12">
-//           <Card className="card-user">
-//             <CardHeader>
-//               <FormGroup>
-//                 <label>Select Operation</label>
-//                 <Autocomplete
-//                       options={rowData}
-//                       getOptionLabel={(option) => option.make}
-//                       style={{ width: 500, height :50 }}
-//                       renderInput={(params) => <TextField {...params} />}
-//                     />
-//               </FormGroup>
-            
-
-
-//             </CardHeader>
-//             <CardBody>
-//               <Row>
-//                 <Col md='12'>
-                 
-//                 </Col>
-//               </Row>
-//               <Row>
-//                 <Col>
-//                 <CustomTables data={rowData} columns={columns} PageSize={5} edit={true} remove={true} paginationSize={5} />
-//                 </Col>
-//               </Row>
-              
-//             </CardBody>
-//           </Card>
-//         </Col>
-//       </Row>
-//     </div>
-
-//   );
-// };
-
 
 export default UpdateLearning;

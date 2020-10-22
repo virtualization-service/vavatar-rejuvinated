@@ -159,10 +159,8 @@ class NewTraining extends React.Component {
                           <label>Protocol</label>
                           <FormSelect onChange = {this.handleChange}
                             name="protocol"
-                            autocomplete="on"
                             value={this.state.protocol}
-                            required
-                          >
+                            required                          >
                             <option value={''}>Choose ...</option>
                             <option value={"soap"}>Soap</option>
                             <option value={"rest"}>Rest</option>

@@ -20,13 +20,7 @@ import React from "react";
 
 // reactstrap components
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
   Table,
-  Row,
-  Col,
 } from "reactstrap";
 
 class Tables extends React.Component {

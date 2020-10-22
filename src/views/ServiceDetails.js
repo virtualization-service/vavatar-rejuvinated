@@ -31,7 +31,6 @@ import {
   Card,
   CardBody,
   FormGroup,
-  Input,
   Row,
   Col,
 } from "reactstrap";
@@ -140,6 +139,15 @@ class ServiceDetails extends React.Component {
                         </Col>
                         <Col className="pr-1" md="2">
                           <FormGroup>
+                          <Button
+                              className="btn-link"
+                              color="primary"
+                              type="button"
+                              hidden={this.state.inputList.length <= 1 ? true : false}
+                              onClick={() => this.DeleteItem(this.state.inputList, index)}
+                            >
+                              <i className="nc-icon nc-simple-delete"></i>
+                            </Button>
                             <Button
                               className="btn-link"
                               color="primary"
@@ -149,15 +157,7 @@ class ServiceDetails extends React.Component {
                               onClick={() => this.AddItem(this.state.inputList)} >
                               <i className="nc-icon nc-simple-add"></i>
                             </Button>
-                            <Button
-                              className="btn-link"
-                              color="primary"
-                              type="button"
-                              hidden={this.state.inputList.length <= 1 ? true : false}
-                              onClick={() => this.DeleteItem(this.state.inputList, index)}
-                            >
-                              <i className="nc-icon nc-simple-delete"></i>
-                            </Button>
+                          
                           </FormGroup>
                         </Col>
                       </Row>

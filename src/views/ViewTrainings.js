@@ -48,15 +48,12 @@ class ViewTrainings extends React.Component {
   constructor(props) {
     super(props);
 
-    var self = this;
-
     this.state = {
       rowData:[]};
       this.loadOperations = this.loadOperations.bind(this);
+      this.onDeleteClick = this.onDeleteClick.bind(this);
 
       this.loadOperations();
-      this.onDeleteClick = this.onDeleteClick.bind(this);
-    
   }
 
   loadOperations(){
@@ -75,11 +72,10 @@ class ViewTrainings extends React.Component {
   }
 
 
-  onDeleteClick(operation){
+  onDeleteClick(data){
     var service = new DataService();
-    service.deleteOperation(operation)
+    service.deleteOperation(data.Operation)
     .then(resp=> this.loadOperations());
-
   }
 
   render() {

@@ -17,6 +17,16 @@ export class DataService {
         });
     }
 
+    deleteResponse(operation, id){
+        return fetch(process.env.REACT_APP_DATA_SERVICE + "/responses?operation=" + operation + "&id=" +id, {
+            method: 'DELETE',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        });
+    }
+
     addNewOperation(body) {
         return fetch( process.env.REACT_APP_CONTROLLER_SERVICE, {
             method: 'POST',

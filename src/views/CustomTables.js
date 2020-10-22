@@ -44,15 +44,10 @@ function CustomTable({ columns, data, edit, remove, paginationSize, onEdit, onDe
     )
 
     const deleteService = (index) => {
-        console.log(index);
         var dataToRemove = data[index];
-
-        var operation = dataToRemove.Operation;
-
         if(onDelete){
-            onDelete(operation);
+            onDelete(dataToRemove);
         }
-        console.log(dataToRemove);
     };
 
 
@@ -73,8 +68,6 @@ function CustomTable({ columns, data, edit, remove, paginationSize, onEdit, onDe
     };
 
     const GetEditColumn = (row) => {
-        console.log("Editing");
-        console.log(row);
         if (!edit && !remove) {
             return;
 
