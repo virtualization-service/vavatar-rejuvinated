@@ -58,8 +58,13 @@ class UpdateLearning extends React.Component {
     this.loadOperations = this.loadOperations.bind(this);
     this.loadServiceData = this.loadServiceData.bind(this);
     this.onDeleteClick = this.onDeleteClick.bind(this);
+    this.onResetClick = this.onResetClick.bind(this);
 
     this.loadOperations();
+  }
+
+  onResetClick(){
+    this.forceUpdate();
   }
 
   loadOperations() {
@@ -145,18 +150,21 @@ class UpdateLearning extends React.Component {
                 </Row>
                 <Row>
                       <div className="update ml-auto mr-auto">
-                      <Button
+                      {/* <Button
+                          hidden = {this.state.selectedOperation === ''}
+                          onClick = {this.onResetClick}
                           className="btn-round"
                           color="secondary"
                           type="button">
                           Reset
-                        </Button>
+                        </Button> */}
                         <Button
+                          hidden = {this.state.selectedOperation === ''}
                           className="btn-round"
                           color="primary"
                           type="button"
                         >
-                          Train Requests
+                          Add More Trainings
                         </Button>
                       </div>
                     </Row>
