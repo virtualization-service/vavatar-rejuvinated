@@ -10,7 +10,10 @@ COPY . ./
 RUN npm run build
 
 # production environment
-FROM nginx:stable-alpine
-COPY --from=build /app/build /usr/share/nginx/html
+FROM nginxinc/nginx-unprivileged 
+
+#### copy nginx conf
+COPY ./config/nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
