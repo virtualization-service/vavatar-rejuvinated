@@ -16,7 +16,7 @@ FROM nginxinc/nginx-unprivileged
 COPY ./config/nginx.conf /etc/nginx/conf.d/default.conf
 
 #### copy artifact build from the 'build environment'
-COPY --from=build /usr/src/app/dist/client /usr/share/nginx/html
+COPY --from=build /usr/src/app/build /usr/share/nginx/html
 
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
