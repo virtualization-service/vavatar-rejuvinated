@@ -9,11 +9,14 @@ RUN npm install react-scripts@3.4.1 -g --silent
 COPY . ./
 RUN npm run build
 
-# production environment
-FROM nginxinc/nginx-unprivileged 
+### STAGE 2: Run ###
+FROM nginxinc/nginx-unprivileged
 
 #### copy nginx conf
 COPY ./config/nginx.conf /etc/nginx/conf.d/default.conf
+
+#### copy artifact build from the 'build environment'
+COPY --from=build /usr/src/app/dist/client /usr/share/nginx/html
 
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
