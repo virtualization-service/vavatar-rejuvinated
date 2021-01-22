@@ -21,10 +21,12 @@ RUN echo "Current working directory"
 
 RUN echo "$PWD"
 
-RUN echo $(ls -1)
+RUN echo $(ls -1 ./usr/src/app/build)
 
 #### copy artifact build from the 'build environment'
 COPY --from=build ./usr/src/app/build ./usr/share/nginx/html
+
+RUN echo $(ls -1 ./usr/share/nginx/html)
 
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
