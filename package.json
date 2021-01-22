@@ -32,7 +32,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && gulp licenses",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "start:development": "env-cmd -f .env npm-run-all -p watch-css start-js",
     "eject": "react-scripts eject",
