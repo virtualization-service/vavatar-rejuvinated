@@ -12,7 +12,8 @@ COPY . .
 RUN npm install && npm run-script build
 
 # nginx state for serving content
-FROM nginx:alpine
+
+FROM nginxinc/nginx-unprivileged
 # Set working directory to nginx asset directory
 WORKDIR /usr/share/nginx/html
 # Remove default nginx static assets
