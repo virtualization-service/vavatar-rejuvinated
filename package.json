@@ -1,8 +1,8 @@
 {
-  "name": "paper-dashboard-react",
+  "name": "v-avatar",
   "version": "1.2.0",
   "private": true,
-  "homepage": "https://demos.creative-tim.com/paper-dashboard-react/#/dashboard",
+  "homepage": ".",
   "dependencies": {
     "@devexpress/dx-react-grid-material-ui": "^2.7.2",
     "@material-ui/core": "^4.11.0",

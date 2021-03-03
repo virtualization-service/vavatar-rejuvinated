@@ -27,6 +27,7 @@ import {
   FormGroup,
   Button
 } from "reactstrap";
+import queryString from 'query-string';
 
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -54,20 +55,25 @@ class UpdateLearning extends React.Component {
     super(props);
 
     this.state = { operations: [], rowData: [], selectedOperation: '' }
+    let params = queryString.parse(props.location.search)
+    
 
     this.loadOperations = this.loadOperations.bind(this);
     this.loadServiceData = this.loadServiceData.bind(this);
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.onResetClick = this.onResetClick.bind(this);
 
-    this.loadOperations();
+    if(params.operation) this.state.readOnlyOperation = true;
+
+    this.loadOperations(params.operation);
+    
   }
 
   onResetClick(){
     this.forceUpdate();
   }
 
-  loadOperations() {
+  loadOperations(selectedOperation) {
     var self = this;
 
     var service = new DataService()
@@ -78,6 +84,13 @@ class UpdateLearning extends React.Component {
         return { "Name": elem, "Operation": elem, "ServiceEndpoint": elem }
       });
       self.setState({ operations: data });
+      if(selectedOperation){
+        selectedOperation = selectedOperation.substr(1);
+        selectedOperation = selectedOperation.slice(0, -1);
+        self.loadServiceData(selectedOperation);
+      }
+      
+
     });
   }
 
@@ -126,13 +139,14 @@ class UpdateLearning extends React.Component {
           <Col md="12">
             <Card className="card-user">
               <CardHeader>
-                <FormGroup>
+                <FormGroup hidden={this.state.readOnlyOperation}>
                   <label>Select Operation</label>
                   <Autocomplete
                     onChange={e => this.loadServiceData(e.target.innerText)}
                     options={this.state.operations}
                     getOptionLabel={(option) => option.Operation}
                     style={{ width: 500, height: 50 }}
+                    value={this.state.dropDownSelected}
                     renderInput={(params) => <TextField {...params} />}
                   />
                 </FormGroup>

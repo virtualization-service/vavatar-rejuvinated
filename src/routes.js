@@ -53,27 +53,27 @@ var routes = [
     icon: "nc-icon nc-bell-55",
     component: UpdateLearning,
     layout: "/admin",
-  },
-  {
-    path: "/user-page",
-    name: "Settings",
-    icon: "nc-icon nc-single-02",
-    component: UserPage,
-    layout: "/admin",
-  },
-  {
-    path: "/tables",
-    name: "Help",
-    icon: "nc-icon nc-tile-56",
-    component: TableList,
-    layout: "/admin",
-  },
-  {
-    path: "/typography",
-    name: "Typography",
-    icon: "nc-icon nc-caps-small",
-    component: Typography,
-    layout: "/admin",
   }
+  // ,{
+  //   path: "/user-page",
+  //   name: "Settings",
+  //   icon: "nc-icon nc-single-02",
+  //   component: UserPage,
+  //   layout: "/admin",
+  // },
+  // {
+  //   path: "/tables",
+  //   name: "Help",
+  //   icon: "nc-icon nc-tile-56",
+  //   component: TableList,
+  //   layout: "/admin",
+  // },
+  // {
+  //   path: "/typography",
+  //   name: "Typography",
+  //   icon: "nc-icon nc-caps-small",
+  //   component: Typography,
+  //   layout: "/admin",
+  // }
 ];
 export default routes;

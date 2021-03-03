@@ -82,7 +82,7 @@ function CustomTable({ columns, data, edit, remove, paginationSize, onEdit, onDe
                 <XSquare />
             </Button>
             <NavLink
-                to={"/admin/newtraining?operation=" + row.index}>
+                to={"/admin/updateLearning?operation=" + JSON.stringify(data[row.index].Operation)}>
 
                 <Button
                     hidden={!edit}

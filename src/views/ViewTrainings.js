@@ -63,10 +63,18 @@ class ViewTrainings extends React.Component {
     var operations = service.getAllOperations();
 
     operations.then(function(response){
-      var data = response.map(function(elem){
-        return {"Name" : elem, "Operation" : elem, "ServiceEndpoint": elem}
-      });
-      self.setState({rowData : data});
+
+      if(response) {
+
+        var data = response.map(function(elem){
+          return {"Name" : elem, "Operation" : elem, "ServiceEndpoint": elem}
+        });
+        self.setState({rowData : data});
+      }
+      else {
+        self.setState({rowData : []})
+
+      }
     });
 
   }

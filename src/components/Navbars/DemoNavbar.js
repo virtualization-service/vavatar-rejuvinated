@@ -146,7 +146,7 @@ class Header extends React.Component {
             <span className="navbar-toggler-bar navbar-kebab" />
             <span className="navbar-toggler-bar navbar-kebab" />
           </NavbarToggler>
-          <Collapse
+          {/* <Collapse
             isOpen={this.state.isOpen}
             navbar
             className="justify-content-end"
@@ -196,7 +196,7 @@ class Header extends React.Component {
                 </Link>
               </NavItem>
             </Nav>
-          </Collapse>
+          </Collapse> */}
         </Container>
       </Navbar>
     );
