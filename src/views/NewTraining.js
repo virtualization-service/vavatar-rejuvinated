@@ -76,15 +76,15 @@ class NewTraining extends React.Component {
                 buttons: [
                     {
                         label: 'Add More Requests',
-                        onClick: () => alert('More Requests')
+                        onClick: () => console.log('More Requests')
                     },
                     {
                         label: 'View Training',
-                        onClick: () => alert('View Trainings')
+                        onClick: () => console.log('View Trainings')
                     },
                     {
                       label: 'View All Trainings',
-                      onClick: () => alert('All Trainings Requests')
+                      onClick: () => console.log('All Trainings Requests')
                   }
                 ]
               });

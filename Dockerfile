@@ -1,26 +1,30 @@
-# Multi-stage
-# 1) Node image for building frontend assets
-# 2) nginx stage to serve frontend assets
+### STAGE 1: Build ###
+FROM node:10-alpine AS build
 
-# Name the node stage "builder"
-FROM node:10 AS builder
-# Set working directory
-WORKDIR /app
-# Copy all files from current directory to working dir in image
+#### make the 'app' folder the current working directory
+WORKDIR /usr/src/app
+
+#### copy both 'package.json' and 'package-lock.json' (if available)
+COPY package*.json ./
+
+
+#### install project dependencies
+RUN npm install
+
+#### copy things
 COPY . .
-# install node modules and build assets
-RUN npm install && npm run-script build
 
-# nginx state for serving content
+#### generate build --prod
+RUN npm run build --production
 
+### STAGE 2: Run ###
 FROM nginxinc/nginx-unprivileged
-# Set working directory to nginx asset directory
-WORKDIR /usr/share/nginx/html
 
+#### copy nginx conf
 COPY ./config/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy static assets from builder stage
-COPY --from=builder /app/build ./
+#### copy artifact build from the 'build environment'
+COPY --from=build /usr/src/app/build /usr/share/nginx/html
 
-# Containers run nginx with global directives and daemon off
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+#### don't know what this is, but seems cool and techy
+CMD ["nginx", "-g", "daemon off;"]
