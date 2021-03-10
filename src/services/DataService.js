@@ -28,7 +28,7 @@ export class DataService {
     }
 
     addNewOperation(body) {
-        return fetch( process.env.REACT_APP_CONTROLLER_SERVICE, {
+        return fetch( process.env.REACT_APP_CONTROLLER_SERVICE + '/virtualization-train', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

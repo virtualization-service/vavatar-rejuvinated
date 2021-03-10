@@ -23,6 +23,7 @@ import Typography from "views/Typography.js";
 import TableList from "views/Tables.js";
 import ViewTrainings from "views/ViewTrainings.js";
 import UserPage from "views/User.js";
+import RecordTraining from "views/RecordTraining";
 
 var routes = [
   {
@@ -55,10 +56,10 @@ var routes = [
     layout: "/admin",
   }
   // ,{
-  //   path: "/user-page",
+  //   path: "/recordTraining",
   //   name: "Settings",
   //   icon: "nc-icon nc-single-02",
-  //   component: UserPage,
+  //   component: RecordTraining,
   //   layout: "/admin",
   // },
   // {

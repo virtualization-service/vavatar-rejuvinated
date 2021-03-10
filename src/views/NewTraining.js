@@ -61,6 +61,24 @@ class NewTraining extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReset = this.handleReset.bind(this);
+    this.getAuthenticationText = this.getAuthenticationText.bind(this);
+  }
+
+  getAuthenticationText(isAuthKey){
+
+    if(this.state.authenticationMethod === "basic"){
+      return isAuthKey ? "Username" : "Password";
+    }
+    if(this.state.authenticationMethod === "token"){
+
+      return isAuthKey ? "" : "Token";
+    }
+
+    if(this.state.authenticationMethod === "api"){
+
+      return isAuthKey ? "API Auth Key" : "API Auth Value";
+    }
+    return "";
   }
 
   handleSubmit(event){
@@ -103,8 +121,6 @@ class NewTraining extends React.Component {
             });
 
     console.log( JSON.stringify(request));
-
-
   }
 
 
@@ -215,26 +231,26 @@ class NewTraining extends React.Component {
 
                         </FormGroup>
                       </Col>
-                      <Col className="px-1" md="4" hidden={this.state.authenticationMethod === "" || this.state.authenticationMethod === "no"}>
+                      <Col className="px-1" md="4" hidden={this.state.authenticationMethod === "" || this.state.authenticationMethod === "no" || this.state.authenticationMethod === "token"}>
                         <FormGroup>
-                          <label>User name</label>
+                          <label> { this.getAuthenticationText(true) }</label>
                           <FormInput
                             onChange = {this.handleChange}
                             value={this.state.authenticationKey}
                             name="authenticationKey"
-                            placeholder="username"
+                            placeholder={this.getAuthenticationText(true)}
                             type="text"
                           />
                         </FormGroup>
                       </Col>
                       <Col className="p1-1" md="4" hidden={this.state.authenticationMethod === "" || this.state.authenticationMethod === "no"}>
                         <FormGroup>
-                          <label>Password</label>
+                          <label>{this.getAuthenticationText(false)}</label>
                           <FormInput
                             onChange = {this.handleChange}
                             value={this.state.authenticationValue}
                             name="authenticationValue"
-                            placeholder="password"
+                            placeholder={this.getAuthenticationText(false)}
                             type="text"
                           />
                         </FormGroup>
