@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTable, usePagination } from 'react-table'
 
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
-import { PencilSquare, XSquare } from 'react-bootstrap-icons'
+import { PencilSquare, XSquare, InfoCircle } from 'react-bootstrap-icons'
+import { Modal } from 'react-bootstrap'
+
+import ActivitiesModal from "views/ActivitiesModal.js"
 
 import { NavLink } from "react-router-dom";
 
@@ -13,9 +16,27 @@ import {
     Button
 } from "reactstrap";
 
+function infoOnClick(row) {
+    
+    return <>
+    <Modal show={true}>
+    <Modal.Header closeButton>
+      <Modal.Title>Modal heading</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+    <Modal.Footer>
+      <Button variant="secondary">
+        Close
+      </Button>
+      <Button variant="primary">
+        Save Changes
+      </Button>
+    </Modal.Footer>
+  </Modal>
+  </>;
+}
 
-
-function CustomTable({ columns, data, edit, remove, paginationSize, onEdit, onDelete }) {
+function CustomTable({ columns, data, edit, info, remove, paginationSize, onEdit, onDelete, onInfo }) {
     // Use the state and functions returned from useTable to build your UI
     const {
         getTableProps,
@@ -33,19 +54,19 @@ function CustomTable({ columns, data, edit, remove, paginationSize, onEdit, onDe
         gotoPage,
         nextPage,
         previousPage,
-        state: { pageIndex },
+        state: { pageIndex, open },
     } = useTable(
         {
             columns,
             data,
-            initialState: { pageIndex: 0, pageSize: paginationSize ?? 10 },
+            initialState: { pageIndex: 0, pageSize: paginationSize ?? 10, open: true },
         },
         usePagination
     )
 
     const deleteService = (index) => {
         var dataToRemove = data[index];
-        if(onDelete){
+        if (onDelete) {
             onDelete(dataToRemove);
         }
     };
@@ -58,7 +79,7 @@ function CustomTable({ columns, data, edit, remove, paginationSize, onEdit, onDe
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () =>  deleteService(row.index)
+                    onClick: () => deleteService(row.index)
                 },
                 {
                     label: 'No',
@@ -66,6 +87,15 @@ function CustomTable({ columns, data, edit, remove, paginationSize, onEdit, onDe
             ]
         });
     };
+   
+    const GetInfoColumn = (row) => {
+        var test = true;
+        if (!info) {
+            return;
+        }
+        var activity = new ActivitiesModal();
+        return activity.showDataModal(row, info);
+    }
 
     const GetEditColumn = (row) => {
         if (!edit && !remove) {
@@ -122,6 +152,7 @@ function CustomTable({ columns, data, edit, remove, paginationSize, onEdit, onDe
                                 })}
 
                                 { GetEditColumn(row)}
+                                { GetInfoColumn(row)}
 
                             </tr>
                         )
