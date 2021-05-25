@@ -54,5 +54,5 @@ jobs:
         # Oc command to be executed
         cmd: |
           'version'
-          'project vavtar-services'
+          'project vavatar-test'
           'tag --source=docker quay.io/neinnovationorg/vavtar-dashboard:${{ steps.extract_branch.outputs.branch }} vavtar-services/vavtar-dashboard:${{ steps.extract_branch.outputs.branch }}'
