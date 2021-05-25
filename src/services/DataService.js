@@ -8,7 +8,7 @@ export class DataService {
     }
 
     getAllRecordOperations() {
-        return this.fetchData(process.env.REACT_APP_DATA_SERVICE + "recordOperations",{
+        return this.fetchData(process.env.REACT_APP_DATA_SERVICE + "/recordOperations",{
             method:'GET',
             headers:{
                 'Accept': 'application/json',
@@ -18,7 +18,7 @@ export class DataService {
     }
 
     getAllActivityLogs() {
-        return this.fetchData(process.env.REACT_APP_DATA_SERVICE + "activityLogs",{
+        return this.fetchData(process.env.REACT_APP_DATA_SERVICE + "/activityLogs",{
             method:'GET',
             headers:{
                 'Accept': 'application/json',
@@ -48,7 +48,7 @@ export class DataService {
     }
 
     recordNewOperation(serviceEndpoint) {
-        return fetch( process.env.REACT_APP_DATA_SERVICE + "recordNew", {
+        return fetch( process.env.REACT_APP_DATA_SERVICE + "/recordNew", {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -58,7 +58,7 @@ export class DataService {
     }
 
     recordExistingOperation(virtualEndpoint, status, edit) {
-        return fetch( process.env.REACT_APP_DATA_SERVICE + "recordExisting", {
+        return fetch( process.env.REACT_APP_DATA_SERVICE + "/recordExisting", {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
