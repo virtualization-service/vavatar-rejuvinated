@@ -14,23 +14,128 @@ import {
     Row,
     Col
 } from "reactstrap";
+import { DataService } from 'services/DataService.js'
+import { confirmAlert } from 'react-confirm-alert';
+import { PlayFill, StopFill } from 'react-bootstrap-icons';
+import CustomTables from "views/CustomTables.js"
 
-import AlbumRoundedIcon from '@material-ui/icons/AlbumRounded';
+function renderCellValues(cell) {
+    return <>
+  <>
+      <Button
+          onClick = {function(){handleRecordExisting(cell)}}
+          className="btn-link btn-warn"
+          color="primary"
+          disabled={cell.value == true}>
+          <PlayFill />
+          Record
+      </Button> 
+  </>
+  <>
+      <Button
+          onClick = {function(){handleRecordExisting(cell)}}
+          className="btn-link btn-danger"
+          color="primary"
+          disabled={cell.value == false}>
+          <StopFill />
+              Stop
+          </Button>
+  </>
+</>;
+}
+
+function handleRecordExisting (cell)  {
+    
+    var service = new DataService();
+    var status = "Active";
+    if(cell.row.values.Edit){
+        status = "Inactive";
+    }
+    var response = service.recordExistingOperation(cell.row.values.VirtualEndpoint,status, !cell.row.values.Edit);
+
+     response.then((response) => {
+         this.loadOperations();
+        })
+            .catch((error) => {
+              confirmAlert({
+                message: 'There has been an unexpected failure, please retry.' + error,
+                buttons: [
+                    {
+                        label: 'Ok',
+                    }
+                ]
+              });
+            });
+    
+  }
+
 
 class RecordTraining extends React.Component {
+    
+    constructor() {
+        super();
+
+        this.state = {
+            rowData: [],
+            service: ""
+        };
+        this.loadOperations = this.loadOperations.bind(this);
+        this.loadOperations();
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this)
+        this.getAuthenticationText = this.getAuthenticationText.bind(this);
+        handleRecordExisting = handleRecordExisting.bind(this);
+    }
+    static columns = [
+        {
+            Header: 'Service Url',
+            accessor: 'ServiceEndpoint',
+        },
+        {
+            Header: 'Status',
+            accessor: 'Status',
+        },
+        {
+            Header: 'Virtual Url',
+            accessor: 'VirtualEndpoint',
+        },
+        {
+            Header: 'Edit',
+            accessor: 'Edit',
+            Cell: ({ cell }) => (renderCellValues(cell))
+        }
+    ];
 
     formRefRequest = React.createRef();
     formRefResponse = React.createRef();
+    
+    
+    loadOperations() {
+        var self = this;
 
-    constructor(props) {
-        super(props);
+        var service = new DataService()
+        var operations = service.getAllRecordOperations();
 
-        this.state = {
+        operations.then(function (response) {
 
-        }
+            if (response) {
 
-        this.getAuthenticationText = this.getAuthenticationText.bind(this);
+                var data = response.map(function (elem) {
+                    return { "ServiceEndpoint": elem.ServiceEndpoint, "Status": elem.Status, "VirtualEndpoint": elem.VirtualEndpoint, "Edit" : elem.Edit }
+                });
+                self.setState({ rowData: data });
+            }
+            else {
+                self.setState({ rowData: [] })
+            }
+        });
+
     }
+    
+
+    handleChange = e => {
+        this.setState({ [e.target.name]: e.target.value })
+      };
 
     getAuthenticationText(isAuthKey) {
 
@@ -49,6 +154,29 @@ class RecordTraining extends React.Component {
         return "";
     }
 
+    handleSubmit(event){
+    
+        var service = new DataService();
+        var response = service.recordNewOperation(this.state.service);
+    
+         response.then((response) => {
+            this.setState({ service: '' })
+            this.loadOperations();
+                })
+                .catch((error) => {
+                  confirmAlert({
+                    message: 'There has been an unexpected failure, please retry recording.' + error,
+                    buttons: [
+                        {
+                            label: 'Ok',
+                            onClick: this.loadOperations()
+                        }
+                    ]
+                  });
+                });
+        
+        
+      }
 
     render() {
 
@@ -78,139 +206,39 @@ class RecordTraining extends React.Component {
                                             </Col>
                                         </Row>
 
-                                         <Row>
-                      <div className="update ml-auto mr-auto">
-                      <Button
-                          className="btn-round"
-                          color="success"
-                          type="button">
-                          Record
-                        </Button>
-                        <Button
-                          className="btn-round"
-                          color="danger"
-                          type="button"
-                          disabled
-                          
-                        >
-                          Stop
-                        </Button>
-                      </div>
-                    </Row>
-
-                                        <Row>
-                                            <Col className="pr-1" md="4">
-                                                <FormGroup>
-                                                    <label>Protocol</label>
-                                                    <FormSelect onChange={this.handleChange}
-                                                        name="protocol"
-                                                        value={this.state.protocol}
-                                                        required                          >
-                                                        <option value={''}>Choose ...</option>
-                                                        <option value={"soap"}>Soap</option>
-                                                        <option value={"rest"}>Rest</option>
-                                                    </FormSelect>
-                                                </FormGroup>
-                                            </Col>
-                                            <Col className="px-1" md="4" hidden={this.state.protocol !== "soap"}>
-                                                <FormGroup>
-                                                    <label>Soap Action</label>
-                                                    <FormInput
-                                                        name="soapaction"
-                                                        onChange={this.handleChange}
-                                                        value={this.state.soapaction}
-                                                        placeholder="Soap Action"
-                                                        type="text"
-                                                    />
-                                                </FormGroup>
-                                            </Col>
-                                            <Col className="p1-1" md="4" hidden={this.state.protocol !== "rest"}>
-                                                <FormGroup>
-                                                    <label>Soap Method</label>
-                                                    <FormSelect
-                                                        value={this.state.method}
-                                                        name="method"
-                                                        onChange={this.handleChange}>
-                                                        <option>Choose ...</option>
-                                                        <option value={"GET"}>GET</option>
-                                                        <option value={"POST"}>POST</option>
-                                                        <option value={"PUT"}>PUT</option>
-                                                        <option value={"DELETE"}>DELETE</option>
-                                                        <option value={"PATCH"}>PATCH</option>
-                                                    </FormSelect>
-                                                </FormGroup>
-                                            </Col>
-                                        </Row>
-
-                                        <Row>
-                                            <Col className="pr-1" md="4">
-                                                <FormGroup>
-                                                    <label>Authentication</label>
-
-                                                    <FormSelect
-                                                        name="authenticationMethod"
-                                                        value={this.state.authenticationMethod}
-                                                        onChange={this.handleChange}>
-                                                        <option>Choose ...</option>
-                                                        <option value={"no"}>No Authentication</option>
-                                                        <option value={"basic"}>Basic Authentication</option>
-                                                        <option value={"token"}>Token Authentication</option>
-                                                        <option value={"api"}>API Key</option>
-                                                    </FormSelect>
-
-                                                </FormGroup>
-                                            </Col>
-                                            <Col className="px-1" md="4" hidden={this.state.authenticationMethod === "" || this.state.authenticationMethod === "no" || this.state.authenticationMethod === "token"}>
-                                                <FormGroup>
-                                                    <label> {this.getAuthenticationText(true)}</label>
-                                                    <FormInput
-                                                        onChange={this.handleChange}
-                                                        value={this.state.authenticationKey}
-                                                        name="authenticationKey"
-                                                        placeholder={this.getAuthenticationText(true)}
-                                                        type="text"
-                                                    />
-                                                </FormGroup>
-                                            </Col>
-                                            <Col className="p1-1" md="4" hidden={this.state.authenticationMethod === "" || this.state.authenticationMethod === "no"}>
-                                                <FormGroup>
-                                                    <label>{this.getAuthenticationText(false)}</label>
-                                                    <FormInput
-                                                        onChange={this.handleChange}
-                                                        value={this.state.authenticationValue}
-                                                        name="authenticationValue"
-                                                        placeholder={this.getAuthenticationText(false)}
-                                                        type="text"
-                                                    />
-                                                </FormGroup>
-                                            </Col>
-                                        </Row>
-
-
                                         <Row>
                                             <div className="update ml-auto mr-auto">
                                                 <Button
-                                                    onClick={this.handleReset}
-                                                    className="btn-round"
-                                                    color="secondary"
-                                                    type="button">
-                                                    Reset
-                                                </Button>
-                                                <Button
-                                                    onClick={this.handleSubmit}
-                                                    className="btn-round"
-                                                    color="primary"
-                                                    type="button">
-                                                    Save
+                                                onClick = {this.handleSubmit}
+                                                    className="btn-link btn-warn"
+                                                    color="primary">
+                                                    <PlayFill />
+                                                    Record
                                                 </Button>
                                             </div>
+                                        </Row>
+                                        <Row>
+                                            <Col>
+                                                <Card className="card-user">
+
+                                                    <CardBody>
+                                                        <Form>
+                                                            <CustomTables data={this.state.rowData} columns={RecordTraining.columns} paginationSize={5} getTrProps = {this.handleRecordExisting} />
+                                                        </Form>
+                                                    </CardBody>
+                                                </Card>
+                                            </Col>
                                         </Row>
                                     </Form>
                                 </CardBody>
                             </Card>
                         </Col>
                     </Row>
+
                 </div>
+                <Row>
+
+                </Row>
             </>
         );
     }

@@ -23,7 +23,8 @@ import Typography from "views/Typography.js";
 import TableList from "views/Tables.js";
 import ViewTrainings from "views/ViewTrainings.js";
 import UserPage from "views/User.js";
-import RecordTraining from "views/RecordTraining";
+import RecordTraining from "views/RecordTraining.js";
+import Activities from "views/Activities.js";
 
 var routes = [
   {
@@ -54,15 +55,22 @@ var routes = [
     icon: "nc-icon nc-bell-55",
     component: UpdateLearning,
     layout: "/admin",
+  },
+  {
+    path: "/recordTraining",
+    name: "Record Learning",
+    icon: "nc-icon nc-single-02",
+    component: RecordTraining,
+    layout: "/admin",
+  },
+  {
+    path: "/activities",
+    name: "Activities",
+    icon: "nc-icon nc-bullet-list-67",
+    component: Activities,
+    layout: "/admin",
   }
   // ,{
-  //   path: "/recordTraining",
-  //   name: "Settings",
-  //   icon: "nc-icon nc-single-02",
-  //   component: RecordTraining,
-  //   layout: "/admin",
-  // },
-  // {
   //   path: "/tables",
   //   name: "Help",
   //   icon: "nc-icon nc-tile-56",
