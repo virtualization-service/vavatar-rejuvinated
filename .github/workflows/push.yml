@@ -55,4 +55,4 @@ jobs:
         cmd: |
           'version'
           'project vavatar-test'
-          'tag --source=docker quay.io/neinnovationorg/vavtar-dashboard:${{ steps.extract_branch.outputs.branch }} vavtar-services/vavtar-dashboard:${{ steps.extract_branch.outputs.branch }}'
+          'tag --source=docker quay.io/neinnovationorg/vavtar-dashboard:${{ steps.extract_branch.outputs.branch }} vavatar-test/vavtar-dashboard:${{ steps.extract_branch.outputs.branch }}'
