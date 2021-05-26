@@ -67,7 +67,7 @@ class ViewTrainings extends React.Component {
       if(response) {
 
         var data = response.map(function(elem){
-          return {"Name" : elem, "Operation" : elem, "ServiceEndpoint": elem}
+          return {"Name" : elem, "Operation" : elem, "ServiceEndpoint": process.env.REACT_APP_CONTROLLER_SERVICE +  elem}
         });
         self.setState({rowData : data});
       }

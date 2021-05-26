@@ -121,7 +121,7 @@ class RecordTraining extends React.Component {
             if (response) {
 
                 var data = response.map(function (elem) {
-                    return { "ServiceEndpoint": elem.ServiceEndpoint, "Status": elem.Status, "VirtualEndpoint": elem.VirtualEndpoint, "Edit" : elem.Edit }
+                    return { "ServiceEndpoint": elem.ServiceEndpoint, "Status": elem.Status, "VirtualEndpoint": process.env.REACT_APP_CONTROLLER_SERVICE + "/" + elem.VirtualEndpoint, "Edit" : elem.Edit }
                 });
                 self.setState({ rowData: data });
             }
